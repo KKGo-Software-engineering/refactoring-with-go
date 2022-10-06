@@ -5,7 +5,11 @@ import (
 	"math"
 )
 
-type Play map[string]map[string]string
+type Play map[string]_Play
+type _Play struct {
+	Name string
+	Type string
+}
 
 type Performance struct {
 	PlayID   string `json:"playID"`
@@ -26,7 +30,7 @@ func statement(invoice Invoice, plays Play) string {
 		play := plays[perf.PlayID]
 		thisAmount := 0.0
 
-		switch play["type"] {
+		switch play.Type {
 		case "tragedy":
 			thisAmount = 40000
 			if perf.Audience > 30 {
@@ -39,18 +43,18 @@ func statement(invoice Invoice, plays Play) string {
 			}
 			thisAmount += 300 * float64(perf.Audience)
 		default:
-			panic(fmt.Sprintf("unknow type: %s", play["type"]))
+			panic(fmt.Sprintf("unknow type: %s", play.Type))
 		}
 
 		// add volume credits
 		volumeCredits += math.Max(float64(perf.Audience-30), 0)
 		// add extra credit for every ten comedy attendees
-		if "comedy" == play["type"] {
+		if "comedy" == play.Type {
 			volumeCredits += math.Floor(float64(perf.Audience / 5))
 		}
 
 		// print line for this order
-		result += fmt.Sprintf("  %s: $%.2f (%d seats)\n", play["name"], thisAmount/100, perf.Audience)
+		result += fmt.Sprintf("  %s: $%.2f (%d seats)\n", play.Name, thisAmount/100, perf.Audience)
 		totalAmount += thisAmount
 	}
 	result += fmt.Sprintf("Amount owed is $%.2f\n", totalAmount/100)
@@ -66,10 +70,10 @@ func main() {
 			{PlayID: "as-like", Audience: 35},
 			{PlayID: "othello", Audience: 40},
 		}}
-	plays := map[string]map[string]string{
-		"hamlet":  {"name": "Hamlet", "type": "tragedy"},
-		"as-like": {"name": "As You Like It", "type": "comedy"},
-		"othello": {"name": "Othello", "type": "tragedy"},
+	plays := map[string]_Play{
+		"hamlet":  {Name: "Hamlet", Type: "tragedy"},
+		"as-like": {Name: "As You Like It", Type: "comedy"},
+		"othello": {Name: "Othello", Type: "tragedy"},
 	}
 
 	bill := statement(inv, plays)
