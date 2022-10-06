@@ -54,20 +54,21 @@ func amountFor(perf Performance, play Play) float64 {
 }
 
 func volumeCreditsFor(perf Performance, plays Plays) float64 {
-	volumeCredits := 0.0
+	result := 0.0
 	// add volume credits
-	volumeCredits += math.Max(float64(perf.Audience-30), 0)
+	result += math.Max(float64(perf.Audience-30), 0)
 	// add extra credit for every ten comedy attendees
 	if "comedy" == playType(playFor(plays, perf)) {
-		volumeCredits += math.Floor(float64(perf.Audience / 5))
+		result += math.Floor(float64(perf.Audience / 5))
 	}
-	return volumeCredits
+	return result
 }
 
 func totalAmountFor(invoice Invoice, plays Plays) float64 {
 	result := 0.0
 	for _, perf := range invoice.Performances {
-		result += amountFor(perf, playFor(plays, perf))
+		play := playFor(plays, perf)
+		result += amountFor(perf, play)
 	}
 	return result
 }
