@@ -3,56 +3,26 @@ package fizzbuzz
 import "testing"
 
 func TestFizzBuzz(t *testing.T) {
-	want := "1"
-	input := 1
-
-	got := FizzBuzz(input)
-
-	if got != want {
-		t.Errorf("FizzBuzz(%d) = %q, want %q", input, got, want)
+	cases := []struct {
+		name  string
+		input int
+		want  string
+	}{
+		{name: "input 1 should be 1", input: 1, want: "1"},
+		{name: "input 2 should be 2", input: 2, want: "2"},
+		{name: "input 3 should be Fizz", input: 3, want: "Fizz"},
+		{name: "input 4 should be 4", input: 4, want: "4"},
+		{name: "input 5 should be Buzz", input: 5, want: "Buzz"},
 	}
-}
 
-func TestInput2ShouldReturn2(t *testing.T) {
-	want := "2"
-	input := 2
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
 
-	got := FizzBuzz(input)
+			got := FizzBuzz(tt.input)
 
-	if got != want {
-		t.Errorf("FizzBuzz(%d) = %q, want %q", input, got, want)
-	}
-}
-
-func TestInput3ShouldReturnFizz(t *testing.T) {
-	want := "Fizz"
-	input := 3
-
-	got := FizzBuzz(input)
-
-	if got != want {
-		t.Errorf("FizzBuzz(%d) = %q, want %q", input, got, want)
-	}
-}
-
-func TestInput4ShouldReturn4(t *testing.T) {
-	want := "4"
-	input := 4
-
-	got := FizzBuzz(input)
-
-	if got != want {
-		t.Errorf("FizzBuzz(%d) = %q, want %q", input, got, want)
-	}
-}
-
-func TestInput5ShouldReturnBuzz(t *testing.T) {
-	want := "Buzz"
-	input := 5
-
-	got := FizzBuzz(input)
-
-	if got != want {
-		t.Errorf("FizzBuzz(%d) = %q, want %q", input, got, want)
+			if got != tt.want {
+				t.Errorf("got %q, want %q", got, tt.want)
+			}
+		})
 	}
 }
