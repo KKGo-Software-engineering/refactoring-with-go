@@ -55,7 +55,6 @@ func amountFor(perf Performance, play Play) float64 {
 
 func volumeCreditsFor(perf Performance, plays Plays) float64 {
 	result := 0.0
-	// add volume credits
 	result += math.Max(float64(perf.Audience-30), 0)
 	// add extra credit for every ten comedy attendees
 	if "comedy" == playType(playFor(plays, perf)) {
@@ -81,13 +80,50 @@ func totalVolumeCreditsFor(performances []Performance, plays Plays) float64 {
 	return result
 }
 
+type Bill struct {
+	Customer           string
+	Rates              []Rate
+	TotalAmount        float64
+	TotalVolumeCredits float64
+}
+
+type Rate struct {
+	Play          Play
+	Amount        float64
+	VolumeCredits float64
+	Audience      int
+}
+
 func statement(invoice Invoice, plays Plays) string {
-	result := fmt.Sprintf("Statement for %s\n", invoice.Customer)
+	return renderPlainText(invoice, plays)
+}
+
+func renderPlainText(invoice Invoice, plays Plays) string {
+
+	rates := []Rate{}
 	for _, perf := range invoice.Performances {
-		result += fmt.Sprintf("  %s: $%.2f (%d seats)\n", playName(playFor(plays, perf)), amountFor(perf, playFor(plays, perf))/100, perf.Audience)
+		r := Rate{
+			Play:          playFor(plays, perf),
+			Amount:        amountFor(perf, playFor(plays, perf)),
+			VolumeCredits: volumeCreditsFor(perf, plays),
+			Audience:      perf.Audience,
+		}
+		rates = append(rates, r)
 	}
-	result += fmt.Sprintf("Amount owed is $%.2f\n", totalAmountFor(invoice, plays)/100)
-	result += fmt.Sprintf("you earned %.0f credits\n", totalVolumeCreditsFor(invoice.Performances, plays))
+
+	bill := Bill{
+		Customer:           invoice.Customer,
+		Rates:              rates,
+		TotalAmount:        totalAmountFor(invoice, plays),
+		TotalVolumeCredits: totalVolumeCreditsFor(invoice.Performances, plays),
+	}
+
+	result := fmt.Sprintf("Statement for %s\n", bill.Customer)
+	for _, r := range bill.Rates {
+		result += fmt.Sprintf("  %s: $%.2f (%d seats)\n", r.Play.Name, r.Amount/100, r.Audience)
+	}
+	result += fmt.Sprintf("Amount owed is $%.2f\n", bill.TotalAmount/100)
+	result += fmt.Sprintf("you earned %.0f credits\n", bill.TotalVolumeCredits)
 	return result
 }
 
