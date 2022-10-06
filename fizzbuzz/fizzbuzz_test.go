@@ -45,3 +45,14 @@ func TestInput4ShouldReturn4(t *testing.T) {
 		t.Errorf("FizzBuzz(%d) = %q, want %q", input, got, want)
 	}
 }
+
+func TestInput5ShouldReturnBuzz(t *testing.T) {
+	want := "Buzz"
+	input := 5
+
+	got := FizzBuzz(input)
+
+	if got != want {
+		t.Errorf("FizzBuzz(%d) = %q, want %q", input, got, want)
+	}
+}
