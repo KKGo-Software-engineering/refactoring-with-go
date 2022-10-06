@@ -53,18 +53,24 @@ func amountFor(perf Performance, play Play) float64 {
 	return result
 }
 
+func volumeCreditsFor(perf Performance, plays Plays) float64 {
+	volumeCredits := 0.0
+	// add volume credits
+	volumeCredits += math.Max(float64(perf.Audience-30), 0)
+	// add extra credit for every ten comedy attendees
+	if "comedy" == playType(playFor(plays, perf)) {
+		volumeCredits += math.Floor(float64(perf.Audience / 5))
+	}
+	return volumeCredits
+}
+
 func statement(invoice Invoice, plays Plays) string {
 	totalAmount := 0.0
 	volumeCredits := 0.0
 	result := fmt.Sprintf("Statement for %s\n", invoice.Customer)
 
 	for _, perf := range invoice.Performances {
-		// add volume credits
-		volumeCredits += math.Max(float64(perf.Audience-30), 0)
-		// add extra credit for every ten comedy attendees
-		if "comedy" == playType(playFor(plays, perf)) {
-			volumeCredits += math.Floor(float64(perf.Audience / 5))
-		}
+		volumeCredits += volumeCreditsFor(perf, plays)
 
 		totalAmount += amountFor(perf, playFor(plays, perf))
 
