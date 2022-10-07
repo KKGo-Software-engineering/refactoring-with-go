@@ -15,12 +15,9 @@ func NewMovie(title string, priceCode int) (rcvr Movie) {
 		priceCode: priceCode,
 	}
 }
-func (rcvr Movie) GetPriceCode() int {
+func (rcvr Movie) PriceCode() int {
 	return rcvr.priceCode
 }
-func (rcvr Movie) GetTitle() string {
+func (rcvr Movie) Title() string {
 	return rcvr.title
-}
-func (rcvr Movie) SetPriceCode(arg int) {
-	rcvr.priceCode = arg
 }

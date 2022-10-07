@@ -16,34 +16,34 @@ func NewCustomer(name string) (rcvr Customer) {
 func (rcvr Customer) AddRental(arg Rental) {
 	rcvr.rentals = append(rcvr.rentals, arg)
 }
-func (rcvr Customer) GetName() string {
+func (rcvr Customer) Name() string {
 	return rcvr.name
 }
 func (rcvr Customer) Statement() string {
 	totalAmount := 0.0
 	frequentRenterPoints := 0
-	result := fmt.Sprintf("%v%v%v", "Rental Record for ", rcvr.GetName(), "\n")
+	result := fmt.Sprintf("%v%v%v", "Rental Record for ", rcvr.Name(), "\n")
 	for _, each := range rcvr.rentals {
 		thisAmount := 0.0
-		switch each.GetMovie().GetPriceCode() {
+		switch each.Movie().PriceCode() {
 		case REGULAR:
 			thisAmount += 2
-			if each.GetDaysRented() > 2 {
-				thisAmount += float64(each.GetDaysRented()-2) * 1.5
+			if each.DaysRented() > 2 {
+				thisAmount += float64(each.DaysRented()-2) * 1.5
 			}
 		case NEW_RELEASE:
-			thisAmount += float64(each.GetDaysRented()) * 3.0
+			thisAmount += float64(each.DaysRented()) * 3.0
 		case CHILDRENS:
 			thisAmount += 1.5
-			if each.GetDaysRented() > 3 {
-				thisAmount += float64(each.GetDaysRented()-3) * 1.5
+			if each.DaysRented() > 3 {
+				thisAmount += float64(each.DaysRented()-3) * 1.5
 			}
 		}
 		frequentRenterPoints++
-		if each.GetMovie().GetPriceCode() == NEW_RELEASE && each.GetDaysRented() > 1 {
+		if each.Movie().PriceCode() == NEW_RELEASE && each.DaysRented() > 1 {
 			frequentRenterPoints++
 		}
-		result += fmt.Sprintf("%v%v%v%.1f%v", "\t", each.GetMovie().GetTitle(), "\t", thisAmount, "\n")
+		result += fmt.Sprintf("%v%v%v%.1f%v", "\t", each.Movie().Title(), "\t", thisAmount, "\n")
 		totalAmount += thisAmount
 	}
 	result += fmt.Sprintf("%v%.1f%v", "Amount owed is ", totalAmount, "\n")
