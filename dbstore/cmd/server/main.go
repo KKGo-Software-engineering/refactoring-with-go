@@ -16,7 +16,13 @@ import (
 func main() {
 	config := config.NewConfig()
 	fmt.Println("start app...")
-	handler := db.NewMainHandler(config.Filename)
+	file, err := os.OpenFile(config.Filename, os.O_CREATE|os.O_RDWR, 0644)
+	if err != nil {
+		log.Fatalf("error file opening for write")
+	}
+	database := db.New(file)
+	service := db.NewService(database)
+	handler := db.NewMainHandler(service)
 
 	// graceful shutdown
 	signals := make(chan os.Signal, 1)
@@ -39,7 +45,7 @@ func main() {
 		fmt.Println("got SIGTERM...")
 	}
 	fmt.Println("App is shutting down...")
-	err := srv.Shutdown(context.Background())
+	err = srv.Shutdown(context.Background())
 	if err != nil {
 		fmt.Printf("Error shutting down: %v\n", err)
 	}
