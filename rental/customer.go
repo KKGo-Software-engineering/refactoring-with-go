@@ -20,37 +20,37 @@ func (rcvr Customer) Name() string {
 	return rcvr.name
 }
 
-func amountFor(each Rental) float64 {
-	thisAmount := 0.0
-	switch each.Movie().PriceCode() {
+func Charge(r Rental) float64 {
+	result := 0.0
+	switch r.Movie().PriceCode() {
 	case REGULAR:
-		thisAmount += 2
-		if each.DaysRented() > 2 {
-			thisAmount += float64(each.DaysRented()-2) * 1.5
+		result += 2
+		if r.DaysRented() > 2 {
+			result += float64(r.DaysRented()-2) * 1.5
 		}
 	case NEW_RELEASE:
-		thisAmount += float64(each.DaysRented()) * 3.0
+		result += float64(r.DaysRented()) * 3.0
 	case CHILDRENS:
-		thisAmount += 1.5
-		if each.DaysRented() > 3 {
-			thisAmount += float64(each.DaysRented()-3) * 1.5
+		result += 1.5
+		if r.DaysRented() > 3 {
+			result += float64(r.DaysRented()-3) * 1.5
 		}
 	}
 
-	return thisAmount
+	return result
 }
 
 func (rcvr Customer) Statement() string {
 	totalAmount := 0.0
 	frequentRenterPoints := 0
 	result := fmt.Sprintf("Rental Record for %v\n", rcvr.Name())
-	for _, each := range rcvr.rentals {
-		thisAmount := amountFor(each)
+	for _, r := range rcvr.rentals {
+		thisAmount := Charge(r)
 		frequentRenterPoints++
-		if each.Movie().PriceCode() == NEW_RELEASE && each.DaysRented() > 1 {
+		if r.Movie().PriceCode() == NEW_RELEASE && r.DaysRented() > 1 {
 			frequentRenterPoints++
 		}
-		result += fmt.Sprintf("\t%v\t%.1f\n", each.Movie().Title(), thisAmount)
+		result += fmt.Sprintf("\t%v\t%.1f\n", r.Movie().Title(), thisAmount)
 		totalAmount += thisAmount
 	}
 	result += fmt.Sprintf("Amount owed is %.1f\n", totalAmount)
