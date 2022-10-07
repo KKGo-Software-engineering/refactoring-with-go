@@ -20,10 +20,6 @@ func (c Customer) Name() string {
 	return c.name
 }
 
-func (r Rental) Charge() float64 {
-	return r.Movie().Price.Charge(r.daysRented)
-}
-
 func getPoints(r Rental) int {
 	if r.Movie().PriceCode() == NEW_RELEASE && r.DaysRented() > 1 {
 		return 2
