@@ -13,46 +13,15 @@ func NewCustomer(name string) (rcvr Customer) {
 		rentals: []Rental{},
 	}
 }
-func (rcvr Customer) AddRental(arg Rental) {
-	rcvr.rentals = append(rcvr.rentals, arg)
+func (c Customer) AddRental(arg Rental) {
+	c.rentals = append(c.rentals, arg)
 }
-func (rcvr Customer) Name() string {
-	return rcvr.name
-}
-
-func RegularCharge(r Rental) float64 {
-	result := 2.0
-	if r.DaysRented() > 2 {
-		result += float64(r.DaysRented()-2) * 1.5
-	}
-	return result
-}
-
-func NewReleaseCharge(r Rental) float64 {
-	return float64(r.DaysRented()) * 3
-}
-
-func ChildrensCharge(daysRented int) float64 {
-	result := 1.5
-	if daysRented > 3 {
-		result += float64(daysRented-3) * 1.5
-	}
-	return result
+func (c Customer) Name() string {
+	return c.name
 }
 
 func (r Rental) Charge() float64 {
-	switch r.Movie().PriceCode() {
-	case REGULAR:
-		return r.Movie().Charger.Charge(r.daysRented)
-	case NEW_RELEASE:
-		return r.Movie().Charger.Charge(r.daysRented)
-	case CHILDRENS:
-		return r.Movie().Charger.Charge(r.daysRented)
-	case 0:
-		return r.Movie().Charger.Charge(r.daysRented)
-	}
-
-	return 0
+	return r.Movie().Price.Charge(r.daysRented)
 }
 
 func getPoints(r Rental) int {
