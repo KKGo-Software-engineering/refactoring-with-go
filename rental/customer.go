@@ -4,22 +4,22 @@ import "fmt"
 
 type Customer struct {
 	name    string
-	rentals []*Rental
+	rentals []Rental
 }
 
-func NewCustomer(name string) (rcvr *Customer) {
-	rcvr = &Customer{}
-	rcvr.rentals = make([]*Rental, 0)
+func NewCustomer(name string) (rcvr Customer) {
+	rcvr = Customer{}
+	rcvr.rentals = make([]Rental, 0)
 	rcvr.name = name
 	return
 }
-func (rcvr *Customer) AddRental(arg *Rental) {
+func (rcvr Customer) AddRental(arg Rental) {
 	rcvr.rentals = append(rcvr.rentals, arg)
 }
-func (rcvr *Customer) GetName() string {
+func (rcvr Customer) GetName() string {
 	return rcvr.name
 }
-func (rcvr *Customer) Statement() string {
+func (rcvr Customer) Statement() string {
 	totalAmount := 0.0
 	frequentRenterPoints := 0
 	result := fmt.Sprintf("%v%v%v", "Rental Record for ", rcvr.GetName(), "\n")
