@@ -14,26 +14,19 @@ import (
 
 // DB type
 type DB struct {
-	filename  string
-	fileWrite io.WriteSeeker
-	fileRead  io.ReadSeeker
 	f         io.ReadWriteSeeker
 	offsetMap map[string]int64
 }
 
 // NewDB return a new intialized Db
 func NewDB(filename string) *DB {
-	fileWrite, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0644)
 	f, err := os.OpenFile(filename, os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		log.Fatalf("error file opening for write")
 	}
-	fileRead, err := os.OpenFile(filename, os.O_RDONLY, 0644)
-	if err != nil {
-		log.Fatalf("error file opening for read")
-	}
+
 	offsetMap := make(map[string]int64)
-	db := &DB{filename: filename, f: f, fileWrite: fileWrite, fileRead: fileRead, offsetMap: offsetMap}
+	db := &DB{f: f, offsetMap: offsetMap}
 	return db
 }
 
