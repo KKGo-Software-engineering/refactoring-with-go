@@ -13,7 +13,7 @@ import (
 func TestSingleServiceGet(t *testing.T) {
 	testdb, teardown := setup(t)
 	defer teardown()
-	db := NewDb(testdb)
+	db := NewDB(testdb)
 	service := NewService(db)
 	key := "foo-key"
 	value := "foo-value"
@@ -35,7 +35,7 @@ func TestSingleServiceDelete(t *testing.T) {
 	// prepare
 	testdb, teardown := setup(t)
 	defer teardown()
-	db := NewDb(testdb)
+	db := NewDB(testdb)
 	service := NewService(db)
 	key := "foo-key"
 	value := "foo-value"
@@ -55,7 +55,7 @@ func TestMultipleServiceSet(t *testing.T) {
 	// prepare testint
 	testdb, teardown := setup(t)
 	defer teardown()
-	db := NewDb(testdb)
+	db := NewDB(testdb)
 	service := NewService(db)
 
 	var wg sync.WaitGroup
