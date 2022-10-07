@@ -19,5 +19,5 @@ func (r Rental) Movie() Movie {
 }
 
 func (r Rental) Charge() float64 {
-	return r.Movie().Price.Charge(r.daysRented)
+	return r.movie.Charge(r.daysRented)
 }
