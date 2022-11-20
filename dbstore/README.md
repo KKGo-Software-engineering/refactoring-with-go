@@ -16,6 +16,8 @@ http --verbose GET "http://localhost:8080/db/mykey?format=json"
 # DELETE
 http --verbose DELETE "http://localhost:8080/db/mykey"
 ```
+# Usage script
+`/usage.sh`
 
 ### Development
 
